@@ -173,7 +173,10 @@ export class RecordComponent implements OnInit {
     this.router.navigateByUrl(routerPath);
   }
   navigateToPatient() {
-    let routerPath = '/patients';
+    let routerPath = '/patients/new';
+    if (CheckEmptyUtil.isNotEmpty(this.patient.Id)) {
+      routerPath = '/patients/' + this.patient.Id;
+    }
     this.router.navigateByUrl(routerPath);
   }
 

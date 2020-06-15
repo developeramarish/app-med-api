@@ -10,9 +10,9 @@ import {
   FractureIndicator, CardiovascularAgeIndicator
 } from './indicators/indicators';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogDiagnosisComponent } from './dialog-diagnosis/dialog-diagnosis.component';
+// import { DialogDiagnosisComponent } from './dialog-diagnosis/dialog-diagnosis.component';
 import { ResourcesService } from '../../services/resources.service';
-import { catchError } from 'rxjs/operators';
+// import { catchError } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({

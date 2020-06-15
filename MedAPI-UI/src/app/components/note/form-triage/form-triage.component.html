@@ -72,7 +72,6 @@
       <div fxLayout="row" fxLayoutGap="24px">
         <mat-form-field fxFlex>
           <mat-label>Presión arterial sistólica (mmHg)</mat-label>
-          <!-- -->
           <input type="number" name="systolic" min="0" matInput #systolic="ngModel"
                  [(ngModel)]="note.triage.vitalFunctions.systolic" (change)="updateComputedFields()" required>
           <mat-error *ngIf="systolic.errors && (systolic.touched || systolic.dirty)">
