@@ -12,18 +12,18 @@ export class PatientService {
 
 
   getResources(resourcesPath: any) {
-    return this.httpUtilService.invoke('GET', null, resourcesPath);
+    return this.httpUtilService.invoke('GET', null, resourcesPath, null);
   }
 
   updateProvinces(resourcesPath: any) {
-    return this.httpUtilService.invoke('GET', null, resourcesPath);
+    return this.httpUtilService.invoke('GET', null, resourcesPath, null);
   }
 
   updateDistricts(resourcesPath: any) {
-    return this.httpUtilService.invoke('GET', null, resourcesPath);
+    return this.httpUtilService.invoke('GET', null, resourcesPath, null);
   }
 
-  save(patient: any) {
-    return this.httpUtilService.invoke('POST', patient, 'users/patient');
+  save(patient: any, email: string) {
+    return this.httpUtilService.invoke('POST', patient, 'users/patient', email);
   }
 }

@@ -4,6 +4,7 @@ import { PatientService } from '../service/patient.service';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
 import { CheckEmptyUtil } from '../../../shared/util/check-empty.util';
+import { RecordService } from '../../record/services/record.service';
 
 @Component({
   selector: 'app-create-patient',
@@ -20,7 +21,7 @@ export class CreatePatientComponent implements OnInit {
     lastnameMother: '',
     country: '',
     documentType: '',
-    patientDocumentNumber: '',
+    documentNumber: '',
     birthday: '',
     sex: '',
     maritalStatus: '',
@@ -57,7 +58,13 @@ export class CreatePatientComponent implements OnInit {
     fatherBackground: [],
     otherFatherBackground: '',
     motherBackground: [],
-    otherMotherBackground: ''
+    otherMotherBackground: '',
+    passwordHash: '',
+    cigaretteNumber: '',
+    dormNumber: '',
+    fractureNumber: '',
+    createdTicket: '',
+    highGlucose: ''
   };
 
   resources = null;
@@ -65,7 +72,9 @@ export class CreatePatientComponent implements OnInit {
     waiting: false,
     success: false
   };
-  constructor(public route: ActivatedRoute, public router: Router, private patientService: PatientService, public toastr: ToastrService) {
+  constructor(public route: ActivatedRoute, public router: Router,
+    private recordService: RecordService, private patientService: PatientService,
+    public toastr: ToastrService) {
     //router.events.subscribe((val) => {
     //  if (val instanceof NavigationStart) {
     //    if (val.url.includes('patients/new')) {
@@ -79,28 +88,60 @@ export class CreatePatientComponent implements OnInit {
     let patientId = this.route.snapshot.paramMap.get('id');
     if (CheckEmptyUtil.isNotEmpty(patientId)) {
       let patientData = localStorage.getItem('patient');
-      console.log(patientData, 'patientData');
       if (CheckEmptyUtil.isNotEmpty(patientData)) {
+        this.recordService.passwordHash.subscribe((val) => {
+          this.patient.passwordHash = val;
+        });
         const patientDetails = JSON.parse(patientData);
-        this.patient.id = patientDetails.Id;
-        this.patient.address = patientDetails.Address;
-        this.patient.birthday = patientDetails.Birthday;
-        this.patient.phone = patientDetails.Phone;
-        this.patient.patientDocumentNumber = patientDetails.DocumentNumber;
-        this.patient.documentType = patientDetails.DocumentType;
-        this.patient.email = patientDetails.Email;
-        this.patient.name = patientDetails.FirstName;
-        this.patient.lastnameFather = patientDetails.LastNameFather;
-        this.patient.lastnameMother = patientDetails.LastNameMother;
-        this.patient.maritalStatus = patientDetails.MaritalStatus;
-        if (CheckEmptyUtil.isNotEmpty(patientDetails.OrganDonor)) {
-          this.patient.isDonor = true;
+        console.log(patientDetails, 'patientDetails');
+        this.patient.id = patientDetails.id;
+        this.patient.name = patientDetails.user.firstName;
+        this.patient.lastnameFather = patientDetails.user.lastNameFather;
+        this.patient.lastnameMother = patientDetails.user.lastNameMother;
+        this.patient.country = patientDetails.user.countryId;        
+        this.patient.documentType = patientDetails.user.documentType;
+        this.patient.documentNumber = patientDetails.user.documentNumber;
+        this.patient.birthday = patientDetails.user.birthday;
+        this.patient.sex = patientDetails.user.sex;
+        this.patient.maritalStatus = patientDetails.user.maritalStatus;
+        this.patient.maritalStatus = patientDetails.user.maritalStatus;
+        this.patient.province = patientDetails.user.district;
+        this.patient.district = patientDetails.user.districtId;
+        this.patient.address = patientDetails.user.address;
+        if (CheckEmptyUtil.isNotEmpty(patientDetails.user.organDonor)) {
+          this.patient.isDonor = patientDetails.user.organDonor;
         } else {
           this.patient.isDonor = false;
         }
-        this.patient.sex = patientDetails.Sex;
-        this.patient.country = patientDetails.country;
-        this.patient.district = patientDetails.district;
+        this.patient.email = patientDetails.user.email;
+        this.patient.phone = patientDetails.user.cellphone;
+
+        this.patient.educationalAttainment = patientDetails.educationalAttainment;
+        this.patient.occupation = patientDetails.occupation;
+        this.patient.bloodType = patientDetails.bloodType;
+        this.patient.alcoholConsumption = patientDetails.alcohol;
+        this.patient.physicalActivity = patientDetails.physicalActivity;
+        this.patient.fvConsumption = patientDetails.fruitsVegetables;
+        this.patient.cigaretteNumber = patientDetails.cigaretteNumber;
+        this.patient.dormNumber = patientDetails.dormNumber;
+        this.patient.fractureNumber = patientDetails.fractureNumber;
+        this.patient.highGlucose = patientDetails.highGlucose;
+        this.patient.home = {
+          rooms: patientDetails.residentNumber,
+          population: '',
+          type: patientDetails.homeType,
+          ownership: patientDetails.homeOwnership,
+          material: patientDetails.homeMaterial,
+          electricity: patientDetails.electricity,
+          water: patientDetails.water,
+          sewage: patientDetails.sewage
+        }
+        this.patient.otherAllergies = patientDetails.otherAllergies;
+        this.patient.otherMedicines = patientDetails.otherMedicines;
+        this.patient.otherPersonalBackground = patientDetails.otherPersonalBackground;
+        this.patient.otherFatherBackground = patientDetails.otherFatherBackground;
+        this.patient.otherMotherBackground = patientDetails.otherMotherBackground;
+        this.patient.passwordHash = patientDetails.user.passwordHash;
       }
     }
     this.tabs = [{
@@ -138,22 +179,18 @@ export class CreatePatientComponent implements OnInit {
   submitRequest = function () {
 
     this.submit.waiting = true;
-
-    this.patientService.save(
-      this.patient,
-      function (response) {
-        console.log(response);
-        this.submit.waiting = false;
-        this.submit.success = true;
-        this.toastr.success('Paciente afiliado correctamente.');
-        this.router.navigateByUrl('/record');
-      },
-      function (errors) {
-        console.log(errors);
-        this.submit.waiting = false;
-        this.submit.success = false;
-        this.toastr.error('Ocurrió un error al afiliar el paciente.');
-      });
-
+    let currentUserEmail = localStorage.getItem('email');
+    this.patientService.save(this.patient, currentUserEmail).then((response: any) => {
+      console.log(response);
+      this.submit.waiting = false;
+      this.submit.success = true;
+      this.toastr.success('Paciente afiliado correctamente.');
+      this.router.navigateByUrl('/records');
+    }).catch((error) => {
+      console.log(error);
+      this.submit.waiting = false;
+      this.submit.success = false;
+      this.toastr.error('Ocurrió un error al afiliar el paciente.');
+    });
   }
 }

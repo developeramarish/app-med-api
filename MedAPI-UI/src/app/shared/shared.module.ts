@@ -58,7 +58,11 @@ import { OrderByPipe } from './order-by.pipe';
     MatChipsModule,
     MatListModule,
     MatSlideToggleModule,    
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot({
+      timeOut: 10000,
+      positionClass: 'toast-bottom-right',
+      preventDuplicates: true,
+    }),
     ngfModule,
     MatGridListModule,
     MatDatepickerModule,

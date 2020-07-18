@@ -439,16 +439,16 @@ export class NoteComponent implements OnInit {
     let self = this;
 
     self.submit.waiting = true;
-
-    this.noteService.save(this.note).then((response: any) => {
+    let currentUserEmail = localStorage.getItem('email');
+    this.noteService.save(this.note, currentUserEmail).then((response: any) => {
       console.log(response);
       self.toastr.success('Atención guardada satisfactoriamente.');
       self.submit.waiting = false;
       self.submit.success = true;
       self.note.id = response.id;
       self.router.navigateByUrl('/record')
-    }).catch((errors: any) => {
-      console.log(errors);
+    }).catch((error: any) => {
+      console.log(error);
       self.toastr.error('Ocurrió un error al guardar la atención.');
       self.submit.waiting = false;
       self.submit.success = false;
