@@ -5,6 +5,8 @@ import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
 import { CheckEmptyUtil } from '../../../shared/util/check-empty.util';
 import { RecordService } from '../../record/services/record.service';
+import { Patient } from '../../../models/patient.models';
+import { Home } from '../../../models/home.models';
 
 @Component({
   selector: 'app-create-patient',
@@ -14,58 +16,59 @@ import { RecordService } from '../../record/services/record.service';
 export class CreatePatientComponent implements OnInit {
   tabs: Array<{ title: string; value: string; }>;
   index = new FormControl(0);
-  patient = {
-    id: 0,
-    name: '',
-    lastnameFather: '',
-    lastnameMother: '',
-    country: '',
-    documentType: '',
-    documentNumber: '',
-    birthday: '',
-    sex: '',
-    maritalStatus: '',
-    department: '',
-    province: '',
-    district: '',
-    address: '',
-    isDonor: false,
-    email: '',
-    phone: '',
-    race: '',
-    educationalAttainment: '',
-    occupation: '',
-    bloodType: '',
-    alcoholConsumption: '',
-    physicalActivity: '',
-    fvConsumption: '',
-    home: {
-      rooms: '',
-      population: '',
-      type: '',
-      ownership: '',
-      material: '',
-      electricity: false,
-      water: false,
-      sewage: false
-    },
-    allergies: [],
-    otherAllergies: '',
-    medicines: [],
-    otherMedicines: '',
-    personalBackground: [],
-    otherPersonalBackground: '',
-    fatherBackground: [],
-    otherFatherBackground: '',
-    motherBackground: [],
-    otherMotherBackground: '',
-    passwordHash: '',
-    cigaretteNumber: '',
-    dormNumber: '',
-    fractureNumber: '',
-    createdTicket: '',
-    highGlucose: ''
-  };
+  patient: Patient = new Patient();
+  //patient = {
+  //  id: 0,
+  //  name: '',
+  //  lastnameFather: '',
+  //  lastnameMother: '',
+  //  country: '',
+  //  documentType: '',
+  //  documentNumber: '',
+  //  birthday: '',
+  //  sex: '',
+  //  maritalStatus: '',
+  //  department: '',
+  //  province: '',
+  //  district: '',
+  //  address: '',
+  //  isDonor: false,
+  //  email: '',
+  //  phone: '',
+  //  race: '',
+  //  educationalAttainment: '',
+  //  occupation: '',
+  //  bloodType: '',
+  //  alcoholConsumption: '',
+  //  physicalActivity: '',
+  //  fvConsumption: '',
+  //  home: {
+  //    rooms: '',
+  //    population: '',
+  //    type: '',
+  //    ownership: '',
+  //    material: '',
+  //    electricity: false,
+  //    water: false,
+  //    sewage: false
+  //  },
+  //  allergies: [],
+  //  otherAllergies: '',
+  //  medicines: [],
+  //  otherMedicines: '',
+  //  personalBackground: [],
+  //  otherPersonalBackground: '',
+  //  fatherBackground: [],
+  //  otherFatherBackground: '',
+  //  motherBackground: [],
+  //  otherMotherBackground: '',
+  //  passwordHash: '',
+  //  cigarettes: '',
+  //  dormNumber: '',
+  //  fractureNumber: '',
+  //  createdTicket: '',
+  //  highGlucose: ''
+  //};
 
   resources = null;
   submit = {
@@ -88,61 +91,7 @@ export class CreatePatientComponent implements OnInit {
     let patientId = this.route.snapshot.paramMap.get('id');
     if (CheckEmptyUtil.isNotEmpty(patientId)) {
       let patientData = localStorage.getItem('patient');
-      if (CheckEmptyUtil.isNotEmpty(patientData)) {
-        this.recordService.passwordHash.subscribe((val) => {
-          this.patient.passwordHash = val;
-        });
-        const patientDetails = JSON.parse(patientData);
-        console.log(patientDetails, 'patientDetails');
-        this.patient.id = patientDetails.id;
-        this.patient.name = patientDetails.user.firstName;
-        this.patient.lastnameFather = patientDetails.user.lastNameFather;
-        this.patient.lastnameMother = patientDetails.user.lastNameMother;
-        this.patient.country = patientDetails.user.countryId;        
-        this.patient.documentType = patientDetails.user.documentType;
-        this.patient.documentNumber = patientDetails.user.documentNumber;
-        this.patient.birthday = patientDetails.user.birthday;
-        this.patient.sex = patientDetails.user.sex;
-        this.patient.maritalStatus = patientDetails.user.maritalStatus;
-        this.patient.maritalStatus = patientDetails.user.maritalStatus;
-        this.patient.province = patientDetails.user.district;
-        this.patient.district = patientDetails.user.districtId;
-        this.patient.address = patientDetails.user.address;
-        if (CheckEmptyUtil.isNotEmpty(patientDetails.user.organDonor)) {
-          this.patient.isDonor = patientDetails.user.organDonor;
-        } else {
-          this.patient.isDonor = false;
-        }
-        this.patient.email = patientDetails.user.email;
-        this.patient.phone = patientDetails.user.cellphone;
-
-        this.patient.educationalAttainment = patientDetails.educationalAttainment;
-        this.patient.occupation = patientDetails.occupation;
-        this.patient.bloodType = patientDetails.bloodType;
-        this.patient.alcoholConsumption = patientDetails.alcohol;
-        this.patient.physicalActivity = patientDetails.physicalActivity;
-        this.patient.fvConsumption = patientDetails.fruitsVegetables;
-        this.patient.cigaretteNumber = patientDetails.cigaretteNumber;
-        this.patient.dormNumber = patientDetails.dormNumber;
-        this.patient.fractureNumber = patientDetails.fractureNumber;
-        this.patient.highGlucose = patientDetails.highGlucose;
-        this.patient.home = {
-          rooms: patientDetails.residentNumber,
-          population: '',
-          type: patientDetails.homeType,
-          ownership: patientDetails.homeOwnership,
-          material: patientDetails.homeMaterial,
-          electricity: patientDetails.electricity,
-          water: patientDetails.water,
-          sewage: patientDetails.sewage
-        }
-        this.patient.otherAllergies = patientDetails.otherAllergies;
-        this.patient.otherMedicines = patientDetails.otherMedicines;
-        this.patient.otherPersonalBackground = patientDetails.otherPersonalBackground;
-        this.patient.otherFatherBackground = patientDetails.otherFatherBackground;
-        this.patient.otherMotherBackground = patientDetails.otherMotherBackground;
-        this.patient.passwordHash = patientDetails.user.passwordHash;
-      }
+      this.setPatientDetails(patientData);
     }
     this.tabs = [{
       title: 'Información General',
@@ -165,6 +114,62 @@ export class CreatePatientComponent implements OnInit {
 
   }
 
+  setPatientDetails(patientData) {
+    if (CheckEmptyUtil.isNotEmpty(patientData)) {
+      this.recordService.passwordHash.subscribe((val) => {
+        this.patient.passwordHash = val;
+      });
+      const patientDetails = JSON.parse(patientData);
+      console.log(patientDetails, 'patientDetails');
+
+      this.patient.id = patientDetails.id;
+      this.patient.name = patientDetails.user.firstName;
+      this.patient.lastnameFather = patientDetails.user.lastNameFather;
+      this.patient.lastnameMother = patientDetails.user.lastNameMother;
+      this.patient.country = patientDetails.user.countryId;
+      this.patient.documentType = patientDetails.user.documentType;
+      this.patient.documentNumber = patientDetails.user.documentNumber;
+      this.patient.birthday = patientDetails.user.birthday;
+      this.patient.sex = patientDetails.user.sex;
+      this.patient.maritalStatus = patientDetails.user.maritalStatus;
+      this.patient.maritalStatus = patientDetails.user.maritalStatus;
+      this.patient.province = patientDetails.user.district;
+      this.patient.district = patientDetails.user.districtId;
+      this.patient.address = patientDetails.user.address;
+      if (CheckEmptyUtil.isNotEmpty(patientDetails.user.organDonor)) {
+        this.patient.isDonor = patientDetails.user.organDonor;
+      } else {
+        this.patient.isDonor = false;
+      }
+      this.patient.email = patientDetails.user.email;
+      this.patient.phone = patientDetails.user.cellphone;
+
+      this.patient.educationalAttainment = patientDetails.educationalAttainment;
+      this.patient.occupation = patientDetails.occupation;
+      this.patient.bloodType = patientDetails.bloodType;
+      this.patient.alcoholConsumption = patientDetails.alcohol;
+      this.patient.physicalActivity = patientDetails.physicalActivity;
+      this.patient.fvConsumption = patientDetails.fruitsVegetables;
+      this.patient.cigarettes = patientDetails.cigaretteNumber;
+      this.patient.dormNumber = patientDetails.dormNumber;
+      this.patient.fractureNumber = patientDetails.fractureNumber;
+      this.patient.highGlucose = patientDetails.highGlucose;
+      this.patient.home.rooms = patientDetails.residentNumber;
+      this.patient.home.population = '';
+      this.patient.home.type = patientDetails.homeType;
+      this.patient.home.ownership = patientDetails.homeOwnership;
+      this.patient.home.material = patientDetails.homeMaterial;
+      this.patient.home.electricity = patientDetails.electricity;
+      this.patient.home.water = patientDetails.water;
+      this.patient.home.sewage = patientDetails.sewage;      
+      this.patient.otherAllergies = patientDetails.otherAllergies;
+      this.patient.otherMedicines = patientDetails.otherMedicines;
+      this.patient.otherPersonalBackground = patientDetails.otherPersonalBackground;
+      this.patient.otherFatherBackground = patientDetails.otherFatherBackground;
+      this.patient.otherMotherBackground = patientDetails.otherMotherBackground;
+      this.patient.passwordHash = patientDetails.user.passwordHash;
+    }
+  }
 
   getResources() {
     let resourcesPath: string = 'users/resources';

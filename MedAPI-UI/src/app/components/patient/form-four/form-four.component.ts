@@ -13,6 +13,7 @@ export class FormFourComponent implements OnInit {
   constructor(private patientService: PatientService) { }
 
   ngOnInit(): void {
+    console.log(this.patient, 'patient');
     this.patientService.resources.subscribe((o) => {
       this.resources = o;
     });
