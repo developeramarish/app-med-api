@@ -3,6 +3,7 @@ import { CheckEmptyUtil } from '../shared/util/check-empty.util';
 
 export class Patient {
   id = 0;
+  userId = 0;
   name = '';
   lastnameFather = '';
   lastnameMother = '';
@@ -51,6 +52,7 @@ export class Patient {
       if (data.id) {
         this.id = data.id;
       }
+      this.userId = data.userId;
       this.name = data.name;
       this.lastnameFather = data.lastnameFather;
       this.lastnameMother = data.lastnameMother;

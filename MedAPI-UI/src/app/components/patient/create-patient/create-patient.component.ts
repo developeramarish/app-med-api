@@ -123,6 +123,7 @@ export class CreatePatientComponent implements OnInit {
       console.log(patientDetails, 'patientDetails');
 
       this.patient.id = patientDetails.id;
+      this.patient.userId = patientDetails.userId;
       this.patient.name = patientDetails.user.firstName;
       this.patient.lastnameFather = patientDetails.user.lastNameFather;
       this.patient.lastnameMother = patientDetails.user.lastNameMother;

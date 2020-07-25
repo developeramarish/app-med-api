@@ -500,7 +500,7 @@ export class NoteComponent implements OnInit {
       self.submit.waiting = false;
       self.submit.success = true;
       self.note.id = response.id;
-      self.router.navigateByUrl('/');
+      this.router.navigateByUrl('/records');
     }).catch((error: any) => {
       console.log(error);
       self.toastr.error('Ocurrió un error al guardar la atención.');

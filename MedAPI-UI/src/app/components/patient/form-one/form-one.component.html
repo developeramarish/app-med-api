@@ -53,7 +53,7 @@
     <mat-form-field fxFlex="30" fxFlex.md="45" fxFlex.sm="100">
       <mat-label>Número de documento</mat-label>
       <input type="text" name="patientDocumentNumber" matInput #patientDocumentNumber="ngModel"
-             [(ngModel)]="patient.documentNumber" required>
+             [(ngModel)]="patient.documentNumber" required maxlength="8">
       <mat-error *ngIf="patientDocumentNumber.errors && (patientDocumentNumber.touched || patientDocumentNumber.dirty)">
         Este campo es requerido
       </mat-error>
